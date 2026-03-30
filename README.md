@@ -10,6 +10,10 @@ This repository accompanies a series of articles about the **ESP32-C6** microcon
 
 All programs are based on [examples](https://github.com/espressif/arduino-esp32/tree/master/libraries/Zigbee/examples) from the **[Arduino ESP32 library](https://github.com/espressif/arduino-esp32)** (there is a [Zigbee subfolder](https://github.com/espressif/arduino-esp32/tree/master/libraries/Zigbee)). However, this library is largely dependent on the parent **[esp-zigbee-sdk](https://github.com/espressif/esp-zigbee-sdk)**. The subdirectory [components/esp-zigbee-lib/include/](https://github.com/espressif/esp-zigbee-sdk/tree/main/components/esp-zigbee-lib/include) contains many files that define, for example, cluster and attribute settings for the various devices.
 
+Another useful source of information is provided by the Espressif documents with the [Zigbee API description](https://docs.espressif.com/projects/arduino-esp32/en/latest/libraries.html#zigbee-apis).
+
+If you are working with devices from the Chinese developer **Tuya**, you should take a look at the [documentation](https://developer.tuya.com/en/docs/connect-subdevices-to-gateways/Zigbee_2?id=Kcww7qppbe87m), e.g. a technical overview of a [Smart Plug energy meter](https://developer.tuya.com/en/docs/connect-subdevices-to-gateways/tuya-zigbee-measuring-smart-plug-access-standard?id=K9ik6zvofpzqk).
+
 ## Development Environment (Arduino)
 ````plaintext
 Arduino IDE Version 2.3.8 (Windows)
