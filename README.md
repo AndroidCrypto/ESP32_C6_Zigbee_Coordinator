@@ -1,1 +1,2 @@
-# ESP32_C6_Zigbee_Coordinator
+# ESP32-C6 Zigbee Coordinator
+
