@@ -12,10 +12,10 @@ The code of each sketch is in sepate folders.
 
 ### ESP32-C6 as Zigbee Coordinator for a Switch
 
-- Original "On-Off-Light" sketch:   **[Esp32_H2_SM_OnboardLeds_v02](./Esp32_H2_SM_OnboardLeds_v02)** folder
-- Original "On-Off-Switch" sketch:  **[Esp32_H2_SM_SSD1306_OLED_v02](./Esp32_H2_SM_SSD1306_OLED_v02)** folder
-- "On-Off-Light with OLED" sketch:  **[Esp32_H2_SM_SHT41_Sensor_v02](./Esp32_H2_SM_SHT41_Sensor_v02)** folder **(recommended)**
-- "On-Off-Switch with OLED" sketch: **[Esp32_H2_SM_SHT41_Sensor_v02](./Esp32_H2_SM_SHT41_Sensor_v02)** folder **(recommended)**
+- Original "On-Off-Light" sketch:   **[Esp32_C6_Zigbee_On_Off_Light_v01](./Esp32_C6_Zigbee_On_Off_Light_v01)** folder
+- Original "On-Off-Switch" sketch:  **[Esp32_C6_Zigbee_On_Off_Switch_v01](./Esp32_C6_Zigbee_On_Off_Switch_v01)** folder
+- "On-Off-Light with OLED" sketch:  **[Esp32_C6_Zigbee_On_Off_Light_OLED_v01](./Esp32_C6_Zigbee_On_Off_Light_OLED_v01)** folder **(recommended)**
+- "On-Off-Switch with OLED" sketch: **[Esp32_C6_Zigbee_On_Off_Switch_OLED_v01](./Esp32_C6_Zigbee_On_Off_Switch_OLED_v01)** folder **(recommended)**
 
 ## Useful links
 
