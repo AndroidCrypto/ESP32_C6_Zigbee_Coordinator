@@ -13,10 +13,14 @@ The code of each sketch is in sepate folders.
 
 ### ESP32-C6 as Zigbee Coordinator for a Switch
 
-- Original "On-Off-Light" sketch:   **[Esp32_C6_Zigbee_On_Off_Light_v01](./Esp32_C6_Zigbee_On_Off_Light_v01)** folder
-- Original "On-Off-Switch" sketch:  **[Esp32_C6_Zigbee_On_Off_Switch_v01](./Esp32_C6_Zigbee_On_Off_Switch_v01)** folder
-- "On-Off-Light with OLED" sketch:  **[Esp32_C6_Zigbee_On_Off_Light_OLED_v01](./Esp32_C6_Zigbee_On_Off_Light_OLED_v01)** folder **(recommended)**
-- "On-Off-Switch with OLED" sketch: **[Esp32_C6_Zigbee_On_Off_Switch_OLED_v01](./Esp32_C6_Zigbee_On_Off_Switch_OLED_v01)** folder **(recommended)**
+- Original "On-Off-Light" sketch:   **[Esp32_C6_Zigbee_On_Off_Light_v01](./Esp32_C6_Zigbee_On_Off_Light_v01)** folder (end device)
+- Original "On-Off-Switch" sketch:  **[Esp32_C6_Zigbee_On_Off_Switch_v01](./Esp32_C6_Zigbee_On_Off_Switch_v01)** folder (coordinator)
+- "On-Off-Light with OLED" sketch:  **[Esp32_C6_Zigbee_On_Off_Light_OLED_v01](./Esp32_C6_Zigbee_On_Off_Light_OLED_v01)** folder **(recommended)**  (end device)
+- "On-Off-Switch with OLED" sketch: **[Esp32_C6_Zigbee_On_Off_Switch_OLED_v01](./Esp32_C6_Zigbee_On_Off_Switch_OLED_v01)** folder **(recommended)** (coordinator)
+
+### ESP32-C6 as Zigbee Coordinator for a Thermostat
+- Original "Temperature_Sensor" sketch:   **[Esp32_C6_Zigbee_Temperature_Sensor_v01](./Esp32_C6_Zigbee_Temperature_Sensor_v01)** folder (end device)
+- Original "Thermostat" sketch:  **[Esp32_C6_Zigbee_Thermostat_v01](./Esp32_C6_Zigbee_Thermostat_v01)** folder (coordinator)
 
 ## Useful links
 
