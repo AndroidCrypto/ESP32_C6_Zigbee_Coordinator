@@ -6,6 +6,17 @@ This repository accompanies a series of articles about the **ESP32-C6** microcon
 - **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Thermometer or Thermostat**: soon
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 1)**: soon
 
+## Sketches for the tutorials
+
+The code of each sketch is in sepate folders.
+
+### ESP32-C6 as Zigbee Coordinator for a Switch
+
+- Original "On-Off-Light" sketch:   **[Esp32_H2_SM_OnboardLeds_v02](./Esp32_H2_SM_OnboardLeds_v02)** folder
+- Original "On-Off-Switch" sketch:  **[Esp32_H2_SM_SSD1306_OLED_v02](./Esp32_H2_SM_SSD1306_OLED_v02)** folder
+- "On-Off-Light with OLED" sketch:  **[Esp32_H2_SM_SHT41_Sensor_v02](./Esp32_H2_SM_SHT41_Sensor_v02)** folder **(recommended)**
+- "On-Off-Switch with OLED" sketch: **[Esp32_H2_SM_SHT41_Sensor_v02](./Esp32_H2_SM_SHT41_Sensor_v02)** folder **(recommended)**
+
 ## Useful links
 
 All programs are based on [examples](https://github.com/espressif/arduino-esp32/tree/master/libraries/Zigbee/examples) from the **[Arduino ESP32 library](https://github.com/espressif/arduino-esp32)** (there is a [Zigbee subfolder](https://github.com/espressif/arduino-esp32/tree/master/libraries/Zigbee)). However, this library is largely dependent on the parent **[esp-zigbee-sdk](https://github.com/espressif/esp-zigbee-sdk)**. The subdirectory [components/esp-zigbee-lib/include/](https://github.com/espressif/esp-zigbee-sdk/tree/main/components/esp-zigbee-lib/include) contains many files that define, for example, cluster and attribute settings for the various devices.
