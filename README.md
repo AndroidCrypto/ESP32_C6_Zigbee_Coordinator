@@ -2,8 +2,9 @@
 
 This repository accompanies a series of articles about the **ESP32-C6** microcontroller, which operates a **Zigbee coordinator**:
 
-- Overview tutorial "**How to use an ESP32-C6 as Zigbee Coordinator or End Device (overview)**": [soon](https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-overview-e70cfa7f45f9)
-- **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Thermometer or Thermostat**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-for-a-switch-or-light-f7b915c99530
+- Overview tutorial "**How to use an ESP32-C6 as Zigbee Coordinator or End Device (overview)**": https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-overview-e70cfa7f45f9
+- **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Light or Switch**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-for-a-switch-or-light-f7b915c99530
+- **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Thermometer or Thermostat**: soon
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 1)**: soon
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 2)**: soon
 
@@ -19,8 +20,9 @@ The code of each sketch is in sepate folders.
 - "On-Off-Switch with OLED" sketch: **[Esp32_C6_Zigbee_On_Off_Switch_OLED_v01](./Esp32_C6_Zigbee_On_Off_Switch_OLED_v01)** folder **(recommended)** (coordinator)
 
 ### ESP32-C6 as Zigbee Coordinator for a Thermostat
-- Original "Temperature_Sensor" sketch:   **[Esp32_C6_Zigbee_Temperature_Sensor_v01](./Esp32_C6_Zigbee_Temperature_Sensor_v01)** folder (end device)
-- Original "Thermostat" sketch:  **[Esp32_C6_Zigbee_Thermostat_v01](./Esp32_C6_Zigbee_Thermostat_v01)** folder (coordinator)
+- Original "Temperature_Sensor" sketch: **[Esp32_C6_Zigbee_Temperature_Sensor_v01](./Esp32_C6_Zigbee_Temperature_Sensor_v01)** folder (end device)
+- Original "Thermostat" sketch: **[Esp32_C6_Zigbee_Thermostat_v01](./Esp32_C6_Zigbee_Thermostat_v01)** folder (coordinator)
+- Modified and advanced "Thermostat" sketch: **[Esp32_C6_Zigbee_Coordinator_Thermostat_OLED_v01](./Esp32_C6_Zigbee_Coordinator_Thermostat_OLED_v01)** folder (coordinator)
 
 ## Useful links
 
@@ -36,4 +38,4 @@ Arduino IDE Version 2.3.8 (Windows)
 arduino-esp32 boards Version 3.3.7 (https://github.com/espressif/arduino-esp32) that is based on Espressif ESP32 Version 5.5.1
 ````
 
-Last update: April, 5 th. 2026
+Last update: April, 12 th. 2026
