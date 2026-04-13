@@ -1,0 +1,78 @@
+partition_zczr_ab_#10000.csv
+
+Das Entfernen von OTA aus deiner spezifischen Tabelle ist ein klassischer Fall von „Speicher-Konsolidierung“. Da du app0 und app1 (zusammen 2,5 MB) sowie otadata hast, gewinnen wir hier massiv Platz für eine einzige, große App-Partition.
+
+Hier ist die angepasste Version ohne OTA:
+
+# Name,       Type, SubType,  Offset,   Size,     Flags
+nvs,          data, nvs,      0x9000,   0x5000,
+# otadata entfernt
+factory,      app,  factory,  0x10000,  0x280000,
+spiffs,       data, spiffs,   0x290000, 0x15A000,
+zb_storage,   data, fat,      0x3EA000, 0x4000,
+zb_fct,       data, fat,      0x3EE000, 0x1000,
+rcp_fw,       data, spiffs,   0x3EF000, 0x1000,
+coredump,     data, coredump, 0x3F0000, 0x10000,
+
+Was ich genau geändert habe:
+
+    otadata gelöscht: Da du kein OTA mehr nutzt, braucht der Bootloader diese Tabelle nicht mehr, um zu wissen, welcher Slot gebootet werden soll.
+
+    app0 & app1 fusioniert: Ich habe beide zu einer einzigen Partition namens factory zusammengefasst.
+
+    Größe berechnet:
+
+        Alte app0: 0x140000
+
+        Alte app1: 0x140000
+
+        Neue factory: 0x280000 (Das sind genau 2,5 MB).
+
+    Offsets beibehalten: Damit dein spiffs und die Zigbee-Partitionen (zb_storage etc.) an exakt derselben Stelle im Speicher bleiben, beginnt die neue factory-Partition wieder bei 0x10000. So musst du die Daten in den hinteren Partitionen nicht neu flashen, wenn sie bereits Daten enthalten.
+
+Wichtige Schritte zur Umsetzung
+
+Damit der ESP32-C6 die Änderung sauber übernimmt, musst du zwei Dinge tun:
+
+1. Flash Speicher löschen (Erase Flash)
+Da in deinem Speicher noch Reste der alten otadata-Partition liegen, würde der ESP32-C6 versuchen, nach OTA-Slots zu suchen, die es nicht mehr gibt. Lösche den Flash einmal komplett:
+
+    Kommandozeile: esptool.py erase_flash
+
+    VS Code: Über den "Erase Flash" Button in der Toolbar.
+
+2. Code-Anpassung (falls nötig)
+Wenn du in deinem Code bisher Funktionen wie esp_ota_get_next_update_partition() genutzt hast, werden diese nun Fehler zurückgeben. Da du kein OTA mehr hast, kannst du alle #include "esp_ota_ops.h" und die dazugehörigen Logiken entfernen.
+
+Soll ich die factory-Partition noch weiter vergrößern? Du hättest theoretisch noch den Platz von otadata (0x2000) zur Verfügung, den ich aktuell einfach leer gelassen habe, um das Alignment der App-Partition bei 0x10000 nicht zu verschieben.
+
+partition_zczr_ab_#09000.csv
+
+Alles klar! Wenn wir den Platz von otadata (0x2000 Bytes) auch noch der factory-Partition zuschlagen, gewinnen wir ein kleines bisschen mehr Raum für deinen Code.
+
+In diesem Fall verschieben wir den Start der factory-Partition nach vorne auf 0x9000 (direkt hinter NVS), damit kein "Loch" im Speicher entsteht.
+Optimierte Partitionstabelle (Maximaler Platz für App)
+
+# Name,       Type, SubType,  Offset,   Size,     Flags
+nvs,          data, nvs,      0x9000,   0x5000,
+# Hier lag früher otadata (0x2000), jetzt Teil von factory
+factory,      app,  factory,  0x14000,  0x27C000,
+spiffs,       data, spiffs,   0x290000, 0x15A000,
+zb_storage,   data, fat,      0x3EA000, 0x4000,
+zb_fct,       data, fat,      0x3EE000, 0x1000,
+rcp_fw,       data, spiffs,   0x3EF000, 0x1000,
+coredump,     data, coredump, 0x3F0000, 0x10000,
+
+Was wurde optimiert?
+
+    Lücken geschlossen: Ich habe den Offset der factory-Partition auf 0x14000 gesetzt. Das ist die Adresse direkt nach der NVS-Partition (0x9000+0x5000).
+
+    Größe angepasst: Die neue Größe der App-Partition beträgt jetzt 0x27C000 (ca. 2,54 MB). Das ist die Differenz zwischen dem Ende der NVS und dem Beginn der SPIFFS-Partition (0x290000-0x14000).
+
+    Stabilität der Daten: Deine restlichen Partitionen (spiffs, zb_storage, etc.) bleiben unangetastet an ihren Original-Adressen. Bestehende Daten dort bleiben also theoretisch erhalten (wobei ein erase_flash nach einer Tabellenänderung trotzdem immer der sicherste Weg ist).
+
+Wichtiger Hinweis zum Bootloader
+
+Da du den Offset der App-Partition von 0x10000 auf 0x14000 geändert hast, musst du das Projekt neu bauen und flashen. Der Bootloader findet die App automatisch, solange sie als Subtype factory markiert ist.
+
+Vergiss nicht den Full-Erase:
