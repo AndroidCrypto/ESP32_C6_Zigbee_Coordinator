@@ -5,7 +5,7 @@ This repository accompanies a series of articles about the **ESP32-C6** microcon
 - Overview tutorial "**How to use an ESP32-C6 as Zigbee Coordinator or End Device (overview)**": https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-overview-e70cfa7f45f9
 - **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Light or Switch**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-for-a-switch-or-light-f7b915c99530
 - **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Thermometer or Thermostat**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-for-a-thermometer-or-thermostat-b91fca418849
-- **Setup a reporting in an ESP32-C6 as Zigbee Coordinator for a Thermostat**: 
+- **Setup a reporting in an ESP32-C6 as Zigbee Coordinator for a Thermostat**: https://medium.com/@androidcrypto/a-zsetup-a-reporting-in-an-esp32-c6-as-zigbee-coordinator-for-a-thermostat-2560b27bfd27
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 1)**: soon
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 2)**: soon
 
