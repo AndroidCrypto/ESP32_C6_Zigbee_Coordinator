@@ -30,7 +30,7 @@ The code of each sketch is in sepate folders.
 - advanced "Thermostat" sketch: **[Esp32_C6_Zigbee_Coordinator_Thermostat_Reporting_OLED_v06](./Esp32_C6_Zigbee_Coordinator_Thermostat_Reporting_OLED_v06)** folder (coordinator)
 
 ### ESP32-C6 as Zigbee Coordinator for a Button
-- "Thermostat" sketch: **soon** folder (coordinator)
+- "Button" sketch: **[Esp32_C6_Zigbee_Button_Switch_OLED_v01](./Esp32_C6_Zigbee_Button_Switch_OLED_v01)** folder (coordinator)
 
 ## Useful links
 
