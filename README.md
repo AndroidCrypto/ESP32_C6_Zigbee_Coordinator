@@ -4,6 +4,8 @@ This repository accompanies a series of articles about the **ESP32-C6** microcon
 
 - Overview tutorial "**How to use an ESP32-C6 as Zigbee Coordinator or End Device (overview)**": https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-overview-e70cfa7f45f9
 - **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Light or Switch**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-for-a-switch-or-light-f7b915c99530
+- **How to control multiple Zigbee switches or lights with an ESP32-C6 Coordinator**: 
+
 - **How to use an ESP32-C6 as Zigbee Coordinator or End Device for a Thermometer or Thermostat**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-zigbee-coordinator-or-end-device-for-a-thermometer-or-thermostat-b91fca418849
 - **Setup a reporting in an ESP32-C6 as Zigbee Coordinator for a Thermostat**: https://medium.com/@androidcrypto/a-zsetup-a-reporting-in-an-esp32-c6-as-zigbee-coordinator-for-a-thermostat-2560b27bfd27
 - **How to use an ESP32-C6 as a Zigbee Coordinator for a Button**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-a-zigbee-coordinator-for-a-button-c2e2a767b7bb
@@ -20,6 +22,10 @@ The code of each sketch is in sepate folders.
 - Original "On-Off-Switch" sketch:  **[Esp32_C6_Zigbee_On_Off_Switch_v01](./Esp32_C6_Zigbee_On_Off_Switch_v01)** folder (coordinator)
 - "On-Off-Light with OLED" sketch:  **[Esp32_C6_Zigbee_On_Off_Light_OLED_v01](./Esp32_C6_Zigbee_On_Off_Light_OLED_v01)** folder **(recommended)**  (end device)
 - "On-Off-Switch with OLED" sketch: **[Esp32_C6_Zigbee_On_Off_Switch_OLED_v01](./Esp32_C6_Zigbee_On_Off_Switch_OLED_v01)** folder **(recommended)** (coordinator)
+
+### ESP32-C6 as Zigbee Coordinator for multiple Switches or Lights
+- Modified "On-Off-Light" sketch:   **[Esp32_C6_Zigbee_On_Off_Light_v01b](./Esp32_C6_Zigbee_On_Off_Light_v01b)** folder (end device): changed the end device number, manufacturer and model name
+- "Multiple Switches/Light" sketch: **[Esp32_C6_Zigbee_On_Off_Multi_Switch_OLED_v01](./Esp32_C6_Zigbee_On_Off_Multi_Switch_OLED_v01)** folder (coordinator)
 
 ### ESP32-C6 as Zigbee Coordinator for a Thermostat
 - Original "Temperature_Sensor" sketch: **[Esp32_C6_Zigbee_Temperature_Sensor_v01](./Esp32_C6_Zigbee_Temperature_Sensor_v01)** folder (end device)
