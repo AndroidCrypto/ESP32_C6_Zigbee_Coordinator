@@ -500,7 +500,7 @@ void printTemperaturesLqisOld() {
 
 // avoid out of memory errors or crashes
 void checkMemory() {
-  Serial.println("--- Speicher-Check ---");
+  Serial.println("--- Memory-Check ---");
   Serial.printf("Current Heap available: %d Bytes\n", ESP.getFreeHeap());
   Serial.printf("Lowest Heap (Min): %d Bytes\n", ESP.getMinFreeHeap());
   Serial.printf("Largest available block: %d Bytes\n\n", ESP.getMaxAllocHeap());
