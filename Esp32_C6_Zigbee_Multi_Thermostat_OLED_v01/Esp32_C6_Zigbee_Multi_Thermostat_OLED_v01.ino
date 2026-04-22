@@ -24,20 +24,7 @@
 21.04.2026 V01 Initial version that is based on the 'single' Thermostat sketch
                ("Esp32_C6_16MB_Zigbee_Coordinator_Thermostat_OLED_v01").
 
-21.04.2026 V05   
-21.04.2026 V04 Saves the result of the router ZDO access (lqi, ieee) to a vector for a
-               temporary storage, display now all lqi, for end devices reporting via a router
-               the device type is now "I" = indirect
-19.04.2026 V03 Tries to retrieve the LQI from all devices of the router but crashes
-18.04.2026 V02 Boot button click is checked by interrupt instead of simple digitalRead  
-17.04.2026 V01 Initial programming, takes up to 5 sensor values, sorted by their short address  
 */
-
-/*
-A4:C1:38:A8:3F:D4:A0:B8 real with display
-A4:C1:38:A7:E0:F2:57:3E real w/o display
-*/
-
 /*
   RGB LED flashing code
 during setup():
@@ -54,7 +41,6 @@ receive Temperature for device index 3: yellow
 receive Temperature for device index 4: purple
 receive Temperature for device index overflow: white
 */
-
 
 #ifndef ZIGBEE_MODE_ZCZR
 #error "Zigbee coordinator mode is not selected in Tools->Zigbee mode"
