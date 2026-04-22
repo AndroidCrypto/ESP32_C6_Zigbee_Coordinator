@@ -37,6 +37,9 @@ The code of each sketch is in sepate folders.
 
 ### ESP32-C6 as Zigbee Coordinator for multiple Thermometers
 - "Multi Thermometer" sketch: **[Esp32_C6_Zigbee_Multi_Thermostat_OLED_v01](./Esp32_C6_Zigbee_Multi_Thermostat_OLED_v01)** folder (coordinator)
+- "Advanced Thermometer" with LQI + RSSI displaying sketch Device 1: **[Esp32_C6_Zigbee_Temperature_Sensor_LQI_OLED_v02_d1](./Esp32_C6_Zigbee_Temperature_Sensor_LQI_OLED_v02_d1)** folder (end device)
+- "Advanced Thermometer" with LQI + RSSI displaying sketch Device 2: **[Esp32_C6_Zigbee_Temperature_Sensor_LQI_OLED_v02_d2](./Esp32_C6_Zigbee_Temperature_Sensor_LQI_OLED_v02_d2)** folder (end device)
+- "Advanced Thermometer" with LQI + RSSI displaying sketch Device 3: **[Esp32_C6_Zigbee_Temperature_Sensor_LQI_OLED_v02_d3](./Esp32_C6_Zigbee_Temperature_Sensor_LQI_OLED_v02_d3)** folder (end device)
 
 ### ESP32-C6 as Zigbee Coordinator for a Button
 - "Button" sketch: **[Esp32_C6_Zigbee_Button_Switch_OLED_v01](./Esp32_C6_Zigbee_Button_Switch_OLED_v01)** folder (coordinator)
@@ -55,4 +58,4 @@ Arduino IDE Version 2.3.8 (Windows)
 arduino-esp32 boards Version 3.3.7 (https://github.com/espressif/arduino-esp32) that is based on Espressif ESP32 Version 5.5.1
 ````
 
-Last update: April, 22 sec. 2026
+Last update: April, 22 2026
