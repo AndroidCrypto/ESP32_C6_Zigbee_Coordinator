@@ -9,6 +9,7 @@ This repository accompanies a series of articles about the **ESP32-C6** microcon
 - **Setup a reporting in an ESP32-C6 as Zigbee Coordinator for a Thermostat**: https://medium.com/@androidcrypto/a-zsetup-a-reporting-in-an-esp32-c6-as-zigbee-coordinator-for-a-thermostat-2560b27bfd27
 - **How to control multiple Zigbee thermometers with an ESP32-C6 Coordinator**: https://medium.com/@androidcrypto/how-to-control-multiple-zigbee-thermometers-with-an-esp32-c6-coordinator-7b0fb27a96c8
 - **How to use an ESP32-C6 as a Zigbee Coordinator for a Button**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-a-zigbee-coordinator-for-a-button-c2e2a767b7bb
+- **Upgrade your ESP32-C6 Zigbee devices and use them as a Zigbee router as well**: soon
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 1)**: soon
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 2)**: soon
 
@@ -44,6 +45,10 @@ The code of each sketch is in sepate folders.
 ### ESP32-C6 as Zigbee Coordinator for a Button
 - "Button" sketch: **[Esp32_C6_Zigbee_Button_Switch_OLED_v01](./Esp32_C6_Zigbee_Button_Switch_OLED_v01)** folder (coordinator)
 
+### ESP32-C6 as Zigbee Router
+- "Thermometer with Router" sketch: **[Esp32_C6_Zigbee_TempSensor_LQI_OLED_Router_v03](./Esp32_C6_Zigbee_TempSensor_LQI_OLED_Router_v03)** folder (combined end device and router)
+- "Multi Thermometer with router support" sketch: **[Esp32_C6_Zigbee_Multi_Thermostat_Router_OLED_v02](./Esp32_C6_Zigbee_Multi_Thermostat_Router_OLED_v02)** folder (coordinator)
+
 ## Useful links
 
 All programs are based on [examples](https://github.com/espressif/arduino-esp32/tree/master/libraries/Zigbee/examples) from the **[Arduino ESP32 library](https://github.com/espressif/arduino-esp32)** (there is a [Zigbee subfolder](https://github.com/espressif/arduino-esp32/tree/master/libraries/Zigbee)). However, this library is largely dependent on the parent **[esp-zigbee-sdk](https://github.com/espressif/esp-zigbee-sdk)**. The subdirectory [components/esp-zigbee-lib/include/](https://github.com/espressif/esp-zigbee-sdk/tree/main/components/esp-zigbee-lib/include) contains many files that define, for example, cluster and attribute settings for the various devices.
@@ -58,4 +63,4 @@ Arduino IDE Version 2.3.8 (Windows)
 arduino-esp32 boards Version 3.3.7 (https://github.com/espressif/arduino-esp32) that is based on Espressif ESP32 Version 5.5.1
 ````
 
-Last update: April, 22 2026
+Last update: April, 28th 2026
