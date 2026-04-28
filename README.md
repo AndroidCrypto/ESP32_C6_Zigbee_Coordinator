@@ -10,7 +10,7 @@ This repository accompanies a series of articles about the **ESP32-C6** microcon
 - **How to control multiple Zigbee thermometers with an ESP32-C6 Coordinator**: https://medium.com/@androidcrypto/how-to-control-multiple-zigbee-thermometers-with-an-esp32-c6-coordinator-7b0fb27a96c8
 - **How to use an ESP32-C6 as a Zigbee Coordinator for a Button**: https://medium.com/@androidcrypto/how-to-use-an-esp32-c6-as-a-zigbee-coordinator-for-a-button-c2e2a767b7bb
 - **Upgrade your ESP32-C6 Zigbee devices and use them as a Zigbee router as well**: https://medium.com/@androidcrypto/upgrade-your-esp32-c6-zigbee-devices-and-use-them-as-a-zigbee-router-as-well-467d4d8e377c
-- **How to use an ESP32-H2 as Zigbee Coordinator or End Device for a Thermometer or Thermostat**: soon
+- **How to use an ESP32-H2 as Zigbee Coordinator or End Device for a Thermometer or Thermostat**: https://medium.com/@androidcrypto/how-to-use-an-esp32-h2-as-zigbee-coordinator-or-end-device-for-a-thermometer-or-thermostat-676e6043560f
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 1)**: soon
 - **How to connect an ESP32-C6 Zigbee Coordinator to a smart plug socket and read the current wattage (part 2)**: soon
 
