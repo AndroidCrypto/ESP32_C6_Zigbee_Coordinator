@@ -1,0 +1,332 @@
+/*
+  Use an ESP32-H2 microcontroller to act as a Zigbee Coordinator for a
+  Zigbee Thermometer end device.
+
+  The example is based on the original Zigbee Thermometer example, but is modified for
+  our needs. For displaying status changes, the onboard RGB LED is used.
+
+  Hardware: ESP32-H2 with minimum 4MB Flash memory
+            Zigbee Thermometer end device (indoor or outdoor, with or without display)
+
+  I copy/paste the original ZigbeeThermostat.h/.cpp files into the sketch folder, renamed the
+  class to ZigbeeThermostatOwn.h/.cpp and added two methods for the battery management. The 
+  class is now receiving the battery voltage and remaining capacity percentage from the end device.
+  Original source:
+  https://github.com/espressif/arduino-esp32/blob/00e8ab428d4305436de1befad3afc1a3e83e4023/libraries/Zigbee/src/ep/ZigbeeThermostat.h
+  https://github.com/espressif/arduino-esp32/blob/00e8ab428d4305436de1befad3afc1a3e83e4023/libraries/Zigbee/src/ep/ZigbeeThermostat.cpp
+
+*/
+
+#ifndef ZIGBEE_MODE_ZCZR
+#error "Zigbee coordinator mode is not selected in Tools->Zigbee mode"
+#endif
+
+const char *PROGRAM_VERSION = "ESP32 H2 Zigbee Coordinator Thermostat LQI OLED V02";
+const char *PROGRAM_VERSION_2 = "Temp LQI V02";
+
+// ------------------------------------------------------------------
+// Onboard RGB LED
+#include "ONBOARD_LEDS.h"
+
+// ------------------------------------------------------------------
+// Zigbee
+#include "Zigbee.h"
+#include "ZigbeeThermostatOwn.h"
+#define THERMOSTAT_ENDPOINT_NUMBER 1
+
+ZigbeeThermostatOwn zbThermostat = ZigbeeThermostatOwn(THERMOSTAT_ENDPOINT_NUMBER);
+
+float sensorTemp = 0, sensorHumid = 0;
+float batteryVoltage = 0;
+uint8_t batteryPercentage = 0;
+float prevTemp = 0, prevHumid = 0;
+float prevBatteryVoltage = 0;
+int8_t prevBatteryPercentage = 0;
+
+char budc[8];  // batteryUndervoltageDetectorCount as char
+uint32_t rxCounter = 0;
+
+// ------------------------------------------------------------------
+// Boot button
+
+uint8_t bootButton = BOOT_PIN;  // this is GPIO 9 on most ESP32-C6 boards
+
+// ------------------------------------------------------------------
+// SSD1306 is a 0.96-inches 128x64 px OLED display
+
+#include "SSD1306_OLED.h"
+bool refreshDisplay = false;
+char buf[30];
+
+// ------------------------------------------------------------------
+// Signal quality
+// LQI Link Quality Index
+uint16_t shortAddress = 0;  // this is filled by a temperature transmission
+uint8_t lqiToEnddevice = 0;
+int8_t rssiToEnddevice = 0;
+
+// ------------------------------------------------------------------
+// data/display refresh
+
+const long DATA_REFRESH_MILLIS = 1000;  // 1 second
+long lastDataRefreshMillis = 0;
+long lastTemperatureUpdateMillis, lastHumidityUpdateMillis, lastBatteryVoltageUpdateMillis, lastBatteryPercentageUpdateMillis;
+
+// ------------------------------------------------------------------
+// Zigbee callbacks
+
+void receiveSensorTempWithSource(float temperature, uint8_t src_endpoint, esp_zb_zcl_addr_t src_address) {
+  onboardLedFlashRed(1, 125);  // flash the LED
+  rxCounter++;
+  if (src_address.addr_type == ESP_ZB_ZCL_ADDR_TYPE_SHORT) {
+    Serial.printf("1 Temperature sensor value: %.2f°C from endpoint %d, address 0x%04x\n", temperature, src_endpoint, src_address.u.short_addr);
+    shortAddress = src_address.u.short_addr;
+    getLqi(src_address.u.short_addr);
+  } else {
+    Serial.printf(
+      "2 Temperature sensor value: %.2f°C from endpoint %d, address %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n", temperature, src_endpoint,
+      src_address.u.ieee_addr[7], src_address.u.ieee_addr[6], src_address.u.ieee_addr[5], src_address.u.ieee_addr[4], src_address.u.ieee_addr[3],
+      src_address.u.ieee_addr[2], src_address.u.ieee_addr[1], src_address.u.ieee_addr[0]);
+  }
+  prevTemp = sensorTemp;
+  sensorTemp = temperature;
+  refreshDisplay = true;
+  lastTemperatureUpdateMillis = millis();
+}
+
+void receiveSensorHumidWithSource(float humidity, uint8_t src_endpoint, esp_zb_zcl_addr_t src_address) {
+  onboardLedFlashBlue(1, 125);  // flash the LED
+  rxCounter++;
+  if (src_address.addr_type == ESP_ZB_ZCL_ADDR_TYPE_SHORT) {
+    Serial.printf("1 Humidity sensor value: %.2f percent from endpoint %d, address 0x%04x\n", humidity, src_endpoint, src_address.u.short_addr);
+    shortAddress = src_address.u.short_addr;
+    getLqi(src_address.u.short_addr);
+  } else {
+    Serial.printf(
+      "2 Humidity sensor value: %.2f percent from endpoint %d, address %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n", humidity, src_endpoint,
+      src_address.u.ieee_addr[7], src_address.u.ieee_addr[6], src_address.u.ieee_addr[5], src_address.u.ieee_addr[4], src_address.u.ieee_addr[3],
+      src_address.u.ieee_addr[2], src_address.u.ieee_addr[1], src_address.u.ieee_addr[0]);
+  }
+  prevHumid = sensorHumid;
+  sensorHumid = humidity;
+  refreshDisplay = true;
+  lastHumidityUpdateMillis = millis();
+}
+
+void receiveBatteryVoltageWithSource(uint8_t voltage, uint8_t src_endpoint, esp_zb_zcl_addr_t src_address) {
+  onboardLedFlashGreen(1, 125);  // flash the LED
+  rxCounter++;
+  if (src_address.addr_type == ESP_ZB_ZCL_ADDR_TYPE_SHORT) {
+    Serial.printf("1 Battery Voltage value: %d Volts from endpoint %d, address 0x%04x\n", voltage, src_endpoint, src_address.u.short_addr);
+    shortAddress = src_address.u.short_addr;
+    getLqi(src_address.u.short_addr);
+  } else {
+    Serial.printf(
+      "2 Battery Voltage value: %d Volts from endpoint %d, address %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n", voltage, src_endpoint,
+      src_address.u.ieee_addr[7], src_address.u.ieee_addr[6], src_address.u.ieee_addr[5], src_address.u.ieee_addr[4], src_address.u.ieee_addr[3],
+      src_address.u.ieee_addr[2], src_address.u.ieee_addr[1], src_address.u.ieee_addr[0]);
+  }
+  prevBatteryVoltage = batteryVoltage;
+  batteryVoltage = voltage / 10.0;
+  refreshDisplay = true;
+  lastBatteryVoltageUpdateMillis = millis();
+}
+
+void receiveBatteryPercentageWithSource(uint8_t percentage, uint8_t src_endpoint, esp_zb_zcl_addr_t src_address) {
+  onboardLedFlashWhite(1, 125);  // flash the LED
+  rxCounter++;
+  if (src_address.addr_type == ESP_ZB_ZCL_ADDR_TYPE_SHORT) {
+    Serial.printf("1 Battery Percentage value: %d Volts from endpoint %d, address 0x%04x\n", percentage, src_endpoint, src_address.u.short_addr);
+    shortAddress = src_address.u.short_addr;
+    getLqi(src_address.u.short_addr);
+  } else {
+    Serial.printf(
+      "2 Battery Percentage value: %d %% from endpoint %d, address %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n", percentage, src_endpoint,
+      src_address.u.ieee_addr[7], src_address.u.ieee_addr[6], src_address.u.ieee_addr[5], src_address.u.ieee_addr[4], src_address.u.ieee_addr[3],
+      src_address.u.ieee_addr[2], src_address.u.ieee_addr[1], src_address.u.ieee_addr[0]);
+  }
+  prevBatteryPercentage = batteryPercentage;
+  batteryPercentage = percentage / 2;
+  refreshDisplay = true;
+  lastBatteryPercentageUpdateMillis = millis();
+}
+
+// This is from the Zigbee_On_Off_Switch example
+// Optional: List all bound devices and read manufacturer and model name
+void printDeviceNames() {
+  std::list<zb_device_params_t *> boundLights = zbThermostat.getBoundDevices();
+  for (const auto &device : boundLights) {
+    Serial.printf("Device on endpoint %d, short address: 0x%x\r\n", device->endpoint, device->short_addr);
+    Serial.printf(
+      "IEEE Address: %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\r\n", device->ieee_addr[7], device->ieee_addr[6], device->ieee_addr[5], device->ieee_addr[4],
+      device->ieee_addr[3], device->ieee_addr[2], device->ieee_addr[1], device->ieee_addr[0]);
+    // both methods are defined in ZigbeeEP
+    char *manufacturer = zbThermostat.readManufacturer(device->endpoint, device->short_addr, device->ieee_addr);
+    char *model = zbThermostat.readModel(device->endpoint, device->short_addr, device->ieee_addr);
+    if (manufacturer != nullptr) {
+      Serial.printf("Device manufacturer: %s\r\n", manufacturer);
+    } else {
+      Serial.println(F("No device manufacturer retrieved"));
+    }
+    if (model != nullptr) {
+      Serial.printf("Device model: %s\r\n", model);
+    } else {
+      Serial.println(F("No device model retrieved"));
+    }
+  }
+}
+
+// retrieves the LQI (Link Quality Indicator) and RSSI (Signal strength)
+uint8_t getLqi(uint16_t shrtAddr) {
+  esp_zb_nwk_info_iterator_t iterator = 0;
+  esp_zb_nwk_neighbor_info_t nbr_info;
+
+  Serial.println("--- Signal-Statistic ---");
+
+  while (esp_zb_nwk_get_next_neighbor(&iterator, &nbr_info) == ESP_OK) {
+    Serial.print("Device: 0x");
+    Serial.print(nbr_info.short_addr, HEX);
+
+    // LQI (0 bis 255)
+    Serial.print(" | LQI: ");
+    Serial.print(nbr_info.lqi);
+
+    // RSSI (Wert in dBm, typischerweise negativ, z.B. -65)
+    Serial.print(" | RSSI: ");
+    Serial.print(nbr_info.rssi);
+    Serial.println(" dBm");
+
+    if (nbr_info.short_addr == shrtAddr) {
+      Serial.println("  [Connection to End Device]");
+      lqiToEnddevice = nbr_info.lqi;
+      rssiToEnddevice = nbr_info.rssi;
+    }
+  }
+  Serial.println("-----------------------");
+  return lqiToEnddevice;
+}
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+  Serial.println(PROGRAM_VERSION);
+
+  // Init the boot button switch
+  pinMode(bootButton, INPUT_PULLUP);
+
+  // init the onboard RGB LED
+  setupOnboardLeds();
+  onboardLedFlashRed(1, 125);  // flash the LED in RED
+
+  // init the SSD1306 display
+  setupSsd1306();
+  oDisplay1 = PROGRAM_VERSION_2;
+  oDisplayData13();
+
+  // advanced debug mode
+  Zigbee.setDebugMode(true);
+
+  // register the callback for temperature readings
+  zbThermostat.onTempReceiveWithSource(receiveSensorTempWithSource);
+  // register the callback for humidity readings
+  zbThermostat.onHumidityReceiveWithSource(receiveSensorHumidWithSource);
+
+  // register the callback for the Power Config cluster: battery voltage readings
+  zbThermostat.onBatteryVoltageReceiveWithSource(receiveBatteryVoltageWithSource);
+
+  // register the callback for the Power Config cluster: battery percentage readings
+  zbThermostat.onBatteryPercentReceiveWithSource(receiveBatteryPercentageWithSource);
+  Serial.println("All callbacks are registered");
+
+  // Optional: set Zigbee device name and model
+  zbThermostat.setManufacturerAndModel("AndroidCrypto", "ZigbeeThermostatOwn");
+
+  // Add endpoint to Zigbee Core
+  Zigbee.addEndpoint(&zbThermostat);
+
+  // Open network for 180 seconds after boot
+  Zigbee.setRebootOpenNetwork(180);
+  oDisplay2 = "Network open";
+  oDisplayData13();
+
+  // When all EPs are registered, start Zigbee with ZIGBEE_COORDINATOR mode
+  if (!Zigbee.begin(ZIGBEE_COORDINATOR)) {
+    Serial.println("Zigbee failed to start!");
+    Serial.println("Rebooting...");
+    onboardLedFlashRed(10, 125);
+    ESP.restart();
+  }
+  Serial.println("The Zigbee Coordinator has started");
+  onboardLedFlashWhite(1, 125);
+  oDisplay3 = "Coordinator started";
+  oDisplayData13();
+
+  Serial.println("Waiting for a temperature sensor to bound to the thermostat");
+  while (!zbThermostat.bound()) {
+    Serial.printf(".");
+    delay(500);
+  }
+  Serial.println();
+  Serial.println("A device is bounded to the Coordinator");
+  onboardLedFlashGreen(1, 125);
+  oDisplay4 = "Device bounded";
+  oDisplayData13();
+  delay(1000);
+
+  printDeviceNames();
+  oDisplayClearData();
+  oDisplayData13();
+  refreshDisplay = true;
+}
+
+void loop() {
+
+  // Checking button for factory reset and reporting
+  if (digitalRead(bootButton) == LOW) {  // Push button pressed
+    // Key debounce handling
+    delay(100);
+    int startTime = millis();
+    while (digitalRead(bootButton) == LOW) {
+      delay(50);
+      if ((millis() - startTime) > 3000) {
+        // If key pressed for more than 3secs, factory reset Zigbee and reboot
+        Serial.println("Resetting Zigbee to factory and rebooting in 1s.");
+        onboardLedFlashGreen(10, 125);
+        delay(1000);
+        Zigbee.factoryReset();
+      }
+    }
+  }
+
+  if ((millis() - lastDataRefreshMillis) > DATA_REFRESH_MILLIS) {
+    Serial.printf("Temperature: %02.2f Celsius Humidity: %02.1f %%rH Battery voltage: %1.2f voltage remaining capacity: %3d %%\n", sensorTemp, sensorHumid, batteryVoltage, batteryPercentage);
+    long currentUpdate = millis();
+    uint32_t lastUpdateTemperatureSeconds = (currentUpdate - lastTemperatureUpdateMillis) / 1000;
+    uint32_t lastUpdateHumiditySeconds = (currentUpdate - lastHumidityUpdateMillis) / 1000;
+    uint32_t lastUpdateBatteryVoltageSeconds = (currentUpdate - lastBatteryVoltageUpdateMillis) / 1000;
+    uint32_t lastUpdateBatteryPercentageSeconds = (currentUpdate - lastBatteryPercentageUpdateMillis) / 1000;
+    Serial.printf("Last update for Temperature: %d (%1.2f) Humidity: %d (%1.2f) Battery voltage: %d (%1.2f) percentage: %d (%d) seconds\n",
+                  lastUpdateTemperatureSeconds, sensorTemp - prevTemp, lastUpdateHumiditySeconds, sensorHumid - prevHumid,
+                  lastUpdateBatteryVoltageSeconds, batteryVoltage - prevBatteryVoltage, lastUpdateBatteryPercentageSeconds, batteryPercentage - prevBatteryPercentage);
+    lastDataRefreshMillis = millis();
+    refreshDisplay = true;
+  }
+
+  if (refreshDisplay) {
+
+    sprintf(buf, "%4.1f C %3.0f%%", sensorTemp, sensorHumid);
+    oDisplay1 = buf;
+    sprintf(buf, "Bat %3.1f v %2d %%", batteryVoltage, batteryPercentage);
+    oDisplay2 = buf;
+    sprintf(buf, "LQI %3d|RSSI %3d", lqiToEnddevice, rssiToEnddevice);
+    oDisplay3 = buf;
+    long currentUpdate = millis();
+    uint32_t lastUpdateTemperatureSeconds = (currentUpdate - lastTemperatureUpdateMillis) / 1000;
+    uint32_t lastUpdateBatteryVoltageSeconds = (currentUpdate - lastBatteryVoltageUpdateMillis) / 1000;
+    sprintf(buf, "T %4ds|B %4ds", lastUpdateTemperatureSeconds, lastUpdateBatteryVoltageSeconds);
+    oDisplay4 = buf;
+    oDisplayData1813();
+
+    refreshDisplay = false;
+  }
+}
