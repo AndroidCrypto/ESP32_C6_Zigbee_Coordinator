@@ -22,6 +22,11 @@
   that you use '115200 baud' speed and 'No Line Ending' option.
   For a short explanation of the commands, see the Help.md tab.
 
+  Important: after one or more end devices have bounded it is important
+  to run a call to the "list" command, which in turn calls the 
+  "displayConnectedDevices()" method. Without this step you don't see any 
+  data in the Serial Monitor and on the display !
+
 */
 
 /*
