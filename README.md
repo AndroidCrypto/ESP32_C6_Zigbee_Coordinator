@@ -16,7 +16,7 @@ This repository accompanies a series of articles about the **ESP32-C6** microcon
 
 ## Sketches for the tutorials
 
-The code of each sketch is in sepate folders.
+The code of each sketch is in separate folders.
 
 ### ESP32-C6 as Zigbee Coordinator for a Switch
 
